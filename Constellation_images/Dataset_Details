@@ -1,7 +1,7 @@
-	          NAP	AP	camera_night	camera_afternoon
-Uras_Major	4	  4	       1	
-Cassiopeia	4	  4		
-Orion	        4	  4		
-Perseus	        4	  4		
-Gemini	        4	  4		
-Triangle        4	  4	       2	         2
+	          NAP	AP	camera_night	camera_longexposure   camera_afternoon  Total
+Uras_Major	4	  4	       4	                                          12
+Cassiopeia	4	  4		                 4                                12
+Orion	        4	  4		                 4                                12
+Perseus	        4	  4		                 4                                12
+Gemini	        4	  4	                         4	                          12
+Triangle        4	  4	       2	                              2           12

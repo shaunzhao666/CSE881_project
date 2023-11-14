@@ -175,7 +175,7 @@ def process_image(image, is_type = 'NAP', con = 'Gemini'):
             enhanced = apply_dilation(stars23, kernel_size=(3,3))
         else:
             enhanced = apply_dilation(stars03, kernel_size=(3,3))
-    elif is_type == 'camera_night':
+    elif is_type == 'camera_night' or is_type == 'camera_longexpo':
         enhanced = apply_dilation(thresh1, kernel_size=(2,2))
     else:
         enhanced = apply_dilation(thresh1, kernel_size=(3,3))
@@ -360,32 +360,41 @@ if __name__ == "__main__":
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     constellation = ['UrsaMajor', 'Cassiopeia', 'Gemini', 'Orion', 'Perseus', 'SummerTriangle']
-    condition = ['NAP', 'AP', 'camera_night', 'camera_afternoon']
+    condition = ['NAP', 'AP', 'camera_night', 'camera_afternoon', 'camera_longexpo']
     allowed_extensions = ['.jpg', '.jpeg', '.png']
 
     for confolder in constellation:
         for type in condition:
             data_path = os.path.join(script_dir, 'Constellation_images', confolder, type)
 
-            for filename in os.listdir(data_path):
-                # Check if the file has an allowed image extension
-                if os.path.splitext(filename)[1].lower() not in allowed_extensions:
-                    continue         
+             # Check if the folder exists, if not, skip to the next one
+            if not os.path.exists(data_path):
+                print(f"Folder {data_path} does not exist. Skipping.")
+                continue
 
-                img_path = os.path.join(data_path, filename)
-                img = cv2.imread(img_path)
+            try:
+                for filename in os.listdir(data_path):
+                    # Check if the file has an allowed image extension
+                    if os.path.splitext(filename)[1].lower() not in allowed_extensions:
+                        continue         
 
-                # Check if image reading was successful
-                if img is None:
-                    print(f"Failed to load {img_path}. Skipping.")
-                    continue
+                    img_path = os.path.join(data_path, filename)
+                    img = cv2.imread(img_path)
 
-                contours = process_image(img, is_type = type, con = confolder)
+                    # Check if image reading was successful
+                    if img is None:
+                        print(f"Failed to load {img_path}. Skipping.")
+                        continue
 
-                angles = [i for i in range(0, 360, 15)]
-                rotateContour(img, filename[:-4], contours, angles, 256)
+                    contours = process_image(img, is_type = type, con = confolder)
 
-                sampleCoord(filename[:-4])
+                    angles = [i for i in range(0, 360, 15)]
+                    rotateContour(img, filename[:-4], contours, angles, 256)
+
+                    sampleCoord(filename[:-4])
+
+            except Exception as e:
+                print(f"An error occurred while processing {data_path}: {e}")
                 
 
 
